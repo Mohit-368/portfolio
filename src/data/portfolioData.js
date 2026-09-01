@@ -53,12 +53,12 @@ export const projects = [
 ];
 
 export const personalInfo = {
-  name: "SAHITYA",
+  name: "Mohit",
   // We use an array here so each string gets its own line in the massive hero text
   designation: ["AI &", "Full-Stack", "Engineer"], 
   tagline: "Architecting production-ready RAG pipelines, agentic workflows, and highly distributed microservices.",
   availability: "Available For Work",
-  personalImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80",
+  personalImage: "src/assets/home.jpg",
   backgroundImage: "src/assets/a.jpg", 
   links: {
     github: "https://github.com/yourusername",

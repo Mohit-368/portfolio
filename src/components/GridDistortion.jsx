@@ -19,10 +19,28 @@ varying vec2 vUv;
 void main() {
   vec2 uv = vUv;
   vec4 offset = texture2D(uDataTexture, vUv);
-  gl_FragColor = texture2D(uBackgroundTexture, uv - 0.02 * offset.rg);
+  
+  vec2 dir = offset.rg;
+  
+  // Professional, subtle chromatic aberration
+  float r = texture2D(uBackgroundTexture, uv - 0.02 * dir).r;
+  float g = texture2D(uBackgroundTexture, uv - 0.015 * dir).g;
+  float b = texture2D(uBackgroundTexture, uv - 0.01 * dir).b;
+  float a = texture2D(uBackgroundTexture, uv).a;
+  
+  gl_FragColor = vec4(r, g, b, a);
 }`;
 
-const GridDistortion = ({ grid = 55, mouse = 0.12, strength = 0.15, relaxation = 0.96, backgroundImageSrc, personalImageSrc, className = '' }) => {
+const GridDistortion = ({ 
+  grid = 55, 
+  mouse = 0.12, 
+  strength = 0.15, 
+  relaxation = 0.96, 
+  imageSrc, 
+  backgroundImageSrc, // Handled for compatibility with LandingPage
+  personalImageSrc,   // Handled for compatibility with LandingPage
+  className = '' 
+}) => {
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -35,8 +53,10 @@ const GridDistortion = ({ grid = 55, mouse = 0.12, strength = 0.15, relaxation =
   useEffect(() => {
     if (!containerRef.current) return;
     const container = containerRef.current;
+    
     const scene = new THREE.Scene();
     sceneRef.current = scene;
+
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
@@ -60,27 +80,27 @@ const GridDistortion = ({ grid = 55, mouse = 0.12, strength = 0.15, relaxation =
     };
 
     const textureLoader = new THREE.TextureLoader();
+    const targetImageSrc = imageSrc || backgroundImageSrc;
     
-    textureLoader.load(backgroundImageSrc, texture => {
-      texture.minFilter = THREE.LinearFilter;
-      texture.magFilter = THREE.LinearFilter;
-      texture.wrapS = THREE.ClampToEdgeWrapping;
-      texture.wrapT = THREE.ClampToEdgeWrapping;
-      backgroundAspectRef.current = texture.image.width / texture.image.height;
-      uniforms.uBackgroundTexture.value = texture; 
-      handleResize();
-    });
-    
-    if(personalImageSrc) {
-        textureLoader.load(personalImageSrc, texture => {});
+    if (targetImageSrc) {
+      textureLoader.load(targetImageSrc, texture => {
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.generateMipmaps = false;
+        backgroundAspectRef.current = texture.image.width / texture.image.height;
+        uniforms.uBackgroundTexture.value = texture; 
+        handleResize();
+      });
+    }
+
+    // Load secondary image if provided (to prevent warnings)
+    if (personalImageSrc) {
+        textureLoader.load(personalImageSrc, () => {});
     }
 
     const size = grid;
     const data = new Float32Array(4 * size * size);
-    for (let i = 0; i < size * size; i++) {
-      data[i * 4] = Math.random() * 255 - 125;
-      data[i * 4 + 1] = Math.random() * 255 - 125;
-    }
+    data.fill(0); // Initialize at 0 to prevent initial glitch
     const dataTexture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat, THREE.FloatType);
     dataTexture.needsUpdate = true;
     uniforms.uDataTexture.value = dataTexture;
@@ -109,6 +129,8 @@ const GridDistortion = ({ grid = 55, mouse = 0.12, strength = 0.15, relaxation =
       renderer.setSize(width, height);
 
       const imageAspect = backgroundAspectRef.current;
+      
+      // Scale plane to cover the screen exactly like object-fit: cover
       if (containerAspect > imageAspect) {
         planeRef.current.scale.set(containerAspect, containerAspect / imageAspect, 1);
       } else {
@@ -133,26 +155,44 @@ const GridDistortion = ({ grid = 55, mouse = 0.12, strength = 0.15, relaxation =
       window.addEventListener('resize', handleResize);
     }
 
-    const mouseState = {
-      x: 0, y: 0, prevX: 0, prevY: 0, vX: 0, vY: 0
+    const pointer = {
+      x: 0, y: 0,
+      targetX: 0, targetY: 0,
+      isInside: false
     };
 
     const handleMouseMove = e => {
-      if (!container) return;
       const rect = container.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = 1 - (e.clientY - rect.top) / rect.height;
-      mouseState.vX = x - mouseState.prevX;
-      mouseState.vY = y - mouseState.prevY;
-      Object.assign(mouseState, { x, y, prevX: x, prevY: y });
+      
+      // Exact calculation to map screen coordinates to the scaled plane's UV coordinates
+      // This guarantees the distortion happens exactly under the mouse tip
+      if (planeRef.current && cameraRef.current) {
+        const containerAspect = rect.width / rect.height;
+        const frustumWidth = containerAspect;
+        const frustumHeight = 1;
+
+        const worldX = (x - 0.5) * frustumWidth;
+        const worldY = (y - 0.5) * frustumHeight;
+
+        const planeW = planeRef.current.scale.x;
+        const planeH = planeRef.current.scale.y;
+
+        const uvX = (worldX / planeW) + 0.5;
+        const uvY = (worldY / planeH) + 0.5;
+
+        pointer.targetX = uvX;
+        pointer.targetY = uvY;
+      }
+
+      pointer.isInside = (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom);
     };
 
     const handleMouseLeave = () => {
-      if (dataTexture) dataTexture.needsUpdate = true;
-      Object.assign(mouseState, { x: 0, y: 0, prevX: 0, prevY: 0, vX: 0, vY: 0 });
+      pointer.isInside = false;
     };
 
-    // Attach to WINDOW so UI overlays (like the grid gap) do not block the effect
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseout', handleMouseLeave);
     handleResize();
@@ -160,29 +200,43 @@ const GridDistortion = ({ grid = 55, mouse = 0.12, strength = 0.15, relaxation =
     const animate = () => {
       animationIdRef.current = requestAnimationFrame(animate);
       if (!renderer || !scene || !camera) return;
-      uniforms.time.value += 0.05;
+
       const data = dataTexture.image.data;
       
+      // Decay previous forces
       for (let i = 0; i < size * size; i++) {
         data[i * 4] *= relaxation;
         data[i * 4 + 1] *= relaxation;
       }
       
-      const gridMouseX = size * mouseState.x;
-      const gridMouseY = size * mouseState.y;
-      const maxDist = size * mouse;
+      // Calculate instantaneous velocity to prevent lag
+      const vX = pointer.targetX - pointer.x;
+      const vY = pointer.targetY - pointer.y;
       
-      for (let i = 0; i < size; i++) {
-        for (let j = 0; j < size; j++) {
-          const distSq = Math.pow(gridMouseX - i, 2) + Math.pow(gridMouseY - j, 2);
-          if (distSq < maxDist * maxDist) {
-            const index = 4 * (i + size * j);
-            const power = Math.min(maxDist / Math.sqrt(distSq), 10);
-            data[index] += strength * 100 * mouseState.vX * power;
-            data[index + 1] -= strength * 100 * mouseState.vY * power;
+      pointer.x = pointer.targetX;
+      pointer.y = pointer.targetY;
+
+      if (pointer.isInside && (Math.abs(vX) > 0.0001 || Math.abs(vY) > 0.0001)) {
+        const gridMouseX = size * pointer.x;
+        const gridMouseY = size * pointer.y;
+        const maxDist = size * mouse;
+        
+        for (let i = 0; i < size; i++) {
+          for (let j = 0; j < size; j++) {
+            const distSq = Math.pow(gridMouseX - i, 2) + Math.pow(gridMouseY - j, 2);
+            if (distSq < maxDist * maxDist && distSq > 0) {
+              const index = 4 * (i + size * j);
+              const dist = Math.sqrt(distSq);
+              const power = Math.min(maxDist / dist, 10);
+              
+              // Apply instantaneous force
+              data[index] += strength * 100 * vX * power;
+              data[index + 1] -= strength * 100 * vY * power;
+            }
           }
         }
       }
+
       dataTexture.needsUpdate = true;
       renderer.render(scene, camera);
     };
@@ -206,18 +260,14 @@ const GridDistortion = ({ grid = 55, mouse = 0.12, strength = 0.15, relaxation =
       if (material) material.dispose();
       if (dataTexture) dataTexture.dispose();
       if (uniforms.uBackgroundTexture.value) uniforms.uBackgroundTexture.value.dispose();
-      sceneRef.current = null;
-      rendererRef.current = null;
-      cameraRef.current = null;
-      planeRef.current = null;
     };
-  }, [grid, mouse, strength, relaxation, backgroundImageSrc, personalImageSrc]);
+  }, [grid, mouse, strength, relaxation, imageSrc, backgroundImageSrc, personalImageSrc]);
 
   return (
     <div
       ref={containerRef}
       className={`relative overflow-hidden ${className}`}
-      style={{ width: '100%', height: '100%', minWidth: '0', minHeight: '0' }}
+      style={{ width: '100%', height: '100%', minWidth: '0', minHeight: '0', pointerEvents: 'none' }} // Pointer events none so it doesn't block UI
     />
   );
 };

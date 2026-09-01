@@ -75,13 +75,14 @@ export default function LandingPage() {
         }
       `}</style>
 
-      <div className="bg-[#050505] text-[#EAEAEA] min-h-screen w-full font-mono-custom relative overflow-hidden flex flex-col selection:bg-[#C6F118] selection:text-black">
+      {/* Changed bg-[#050505] to bg-transparent and changed overflow-hidden to overflow-x-hidden */}
+      <div className="bg-transparent text-[#EAEAEA] min-h-screen w-full font-mono-custom relative overflow-x-hidden flex flex-col selection:bg-[#C6F118] selection:text-black">
 
         {/* =========================================
-            DISTORTED BACKGROUND
+            DISTORTED BACKGROUND (Now FIXED)
         ========================================== */}
-
-        <div className="distorted-background-container absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Changed absolute to fixed so the canvas never moves */}
+        <div className="distorted-background-container fixed inset-0 z-0 pointer-events-none overflow-hidden">
           <GridDistortion
             backgroundImageSrc={personalInfo.backgroundImage}
             personalImageSrc={personalInfo.personalImage}
@@ -94,15 +95,15 @@ export default function LandingPage() {
         </div>
 
         {/* =========================================
-            BACKGROUND GLOW
+            BACKGROUND GLOW (Now FIXED)
         ========================================== */}
-
-        <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle,rgba(198,241,24,0.03)_0%,transparent_70%)] blur-3xl z-0 pointer-events-none" />
+        {/* Changed absolute to fixed so the glow never moves */}
+        <div className="fixed top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle,rgba(198,241,24,0.03)_0%,transparent_70%)] blur-3xl z-0 pointer-events-none" />
 
         {/* =========================================
             MASSIVE BACKGROUND TYPOGRAPHY
         ========================================== */}
-
+        {/* Left absolute so this scrolls up with the foreground content */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center z-0 pointer-events-none opacity-[0.02]">
           <h1 className="font-display text-[15vw] font-black leading-none whitespace-nowrap tracking-tighter">
             {personalInfo.name.toUpperCase()}
@@ -116,21 +117,16 @@ export default function LandingPage() {
         <header className="flex justify-between items-center w-full p-6 md:px-12 md:py-8 z-10 relative pointer-events-auto">
 
           {/* Logo / Name */}
-
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-2xl font-display font-bold tracking-tight cursor-pointer hover:text-[#C6F118] transition-colors"
           >
             {personalInfo.name}
-
-            <span className="text-[#C6F118]">
-              ®
-            </span>
+            <span className="text-[#C6F118]">®</span>
           </motion.div>
 
           {/* Right Navigation */}
-
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -138,23 +134,17 @@ export default function LandingPage() {
           >
 
             {/* Availability */}
-
             <div className="hidden md:flex items-center gap-3 bg-neutral-900/50 backdrop-blur-md px-5 py-2.5 rounded-full border border-neutral-800">
-
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C6F118] opacity-75" />
-
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#C6F118]" />
               </span>
-
               <span className="text-[10px] uppercase tracking-widest text-neutral-400">
                 {personalInfo.availability}
               </span>
-
             </div>
 
             {/* Menu Button */}
-
             <motion.button
               whileHover={{
                 scale: 1.05,
@@ -182,7 +172,6 @@ export default function LandingPage() {
           {isSidebarOpen && (
             <>
               {/* Overlay */}
-
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -192,7 +181,6 @@ export default function LandingPage() {
               />
 
               {/* Sidebar */}
-
               <motion.div
                 initial={{
                   x: "100%",
@@ -215,9 +203,7 @@ export default function LandingPage() {
               >
 
                 {/* Sidebar Header */}
-
                 <div className="flex justify-between items-center mb-16 relative z-10">
-
                   <span className="text-xs font-mono-custom tracking-[0.2em] uppercase text-[#C6F118]">
                     Navigation
                   </span>
@@ -236,58 +222,37 @@ export default function LandingPage() {
                   >
                     <X size={18} />
                   </motion.button>
-
                 </div>
 
                 {/* Navigation Links */}
-
                 <nav className="flex flex-col gap-6 font-display text-5xl md:text-6xl font-black uppercase relative z-10 tracking-tighter">
-
                   {[
                     "Home",
                     "Projects",
                     "Experience",
                     "Contact",
                   ].map((item, i) => (
-
                     <motion.a
                       key={item}
                       href={`#${item.toLowerCase()}`}
-                      initial={{
-                        x: 50,
-                        opacity: 0,
-                      }}
-                      animate={{
-                        x: 0,
-                        opacity: 1,
-                      }}
-                      transition={{
-                        delay: i * 0.1 + 0.2,
-                      }}
-                      whileHover={{
-                        x: 20,
-                        color: "#C6F118",
-                      }}
+                      initial={{ x: 50, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: i * 0.1 + 0.2 }}
+                      whileHover={{ x: 20, color: "#C6F118" }}
                       className="text-neutral-600 hover:text-[#C6F118] transition-colors w-max"
                       onClick={() => setIsSidebarOpen(false)}
                     >
                       {item}
                     </motion.a>
-
                   ))}
-
                 </nav>
 
                 {/* Sidebar Bottom */}
-
                 <div className="mt-auto relative z-10">
-
                   <div className="h-px bg-neutral-800 mb-6" />
-
                   <p className="text-[10px] uppercase tracking-widest text-neutral-600">
                     {personalInfo.name} / Portfolio
                   </p>
-
                 </div>
 
               </motion.div>
@@ -303,7 +268,6 @@ export default function LandingPage() {
           id="home"
           className="flex-1 flex items-center justify-center w-full max-w-[1400px] mx-auto p-6 md:p-12 relative z-10 pointer-events-none"
         >
-
           <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center pointer-events-none">
 
             {/* =====================================
@@ -316,28 +280,18 @@ export default function LandingPage() {
               animate="visible"
               className="lg:col-span-7 flex flex-col items-start gap-8 pointer-events-auto"
             >
-
               {/* Designation */}
-
               <h1 className="font-display text-6xl sm:text-7xl lg:text-[7rem] font-black tracking-tighter leading-[0.85] uppercase drop-shadow-lg pointer-events-none">
-
                 {personalInfo.designation.map((line, index) => (
-
-                  <div
-                    key={index}
-                    className="overflow-hidden py-2"
-                  >
+                  <div key={index} className="overflow-hidden py-2">
                     <motion.div variants={textRevealVariants}>
                       {line}
                     </motion.div>
                   </div>
-
                 ))}
-
               </h1>
 
               {/* Tagline */}
-
               <motion.p
                 variants={textRevealVariants}
                 className="text-neutral-400 text-sm md:text-base max-w-md leading-relaxed border-l-2 border-[#C6F118] pl-6 drop-shadow-md bg-black/20 p-2 rounded-r-lg pointer-events-none"
@@ -346,14 +300,11 @@ export default function LandingPage() {
               </motion.p>
 
               {/* CTA + Socials */}
-
               <motion.div
                 variants={textRevealVariants}
                 className="flex flex-wrap items-center gap-6 mt-4"
               >
-
                 {/* Resume */}
-
                 <motion.a
                   href={personalInfo.links.resume}
                   target="_blank"
@@ -364,24 +315,17 @@ export default function LandingPage() {
                     color: "#000",
                     borderColor: "#C6F118",
                   }}
-                  whileTap={{
-                    scale: 0.95,
-                  }}
+                  whileTap={{ scale: 0.95 }}
                   className="border border-neutral-700 bg-neutral-900/60 backdrop-blur-sm text-xs tracking-[0.2em] uppercase py-4 px-8 rounded-full flex items-center gap-3 transition-all duration-300"
                 >
                   View Resume
-
                   <ArrowUpRight size={16} />
                 </motion.a>
 
                 {/* Social Links */}
-
                 <div className="flex items-center gap-3">
-
                   {socialLinks.map((social, idx) => {
-
                     const Icon = social.icon;
-
                     return (
                       <motion.a
                         key={idx}
@@ -392,25 +336,18 @@ export default function LandingPage() {
                         title={social.label}
                         whileHover={{
                           y: -5,
-                          backgroundColor:
-                            "rgba(198,241,24,0.1)",
+                          backgroundColor: "rgba(198,241,24,0.1)",
                           color: "#C6F118",
                           borderColor: "#C6F118",
                         }}
                         className="w-12 h-12 flex items-center justify-center rounded-full border border-neutral-800 bg-neutral-900/60 backdrop-blur-sm text-neutral-400 transition-all duration-300"
                       >
-                        <Icon
-                          size={18}
-                          strokeWidth={1.5}
-                        />
+                        <Icon size={18} strokeWidth={1.5} />
                       </motion.a>
                     );
                   })}
-
                 </div>
-
               </motion.div>
-
             </motion.div>
 
             {/* =====================================
@@ -432,11 +369,8 @@ export default function LandingPage() {
               }}
               className="lg:col-span-5 relative flex justify-center lg:justify-end items-center mt-8 lg:mt-0 pointer-events-auto"
             >
-
               <div className="relative group perspective-1000">
-
                 {/* Draggable Card */}
-
                 <motion.div
                   drag
                   dragConstraints={{
@@ -446,22 +380,14 @@ export default function LandingPage() {
                     bottom: 50,
                   }}
                   dragElastic={0.1}
-                  whileHover={{
-                    scale: 1.02,
-                  }}
-                  whileTap={{
-                    scale: 0.98,
-                    cursor: "grabbing",
-                  }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98, cursor: "grabbing" }}
                   className="relative bg-neutral-900/80 backdrop-blur-md border border-neutral-800 p-2 rounded-[2rem] shadow-2xl max-w-[320px] md:max-w-[400px] w-full cursor-grab z-10 origin-center"
                 >
-
                   {/* Glowing Offset */}
-
                   <div className="absolute top-4 left-4 w-full h-full bg-[#C6F118]/10 border border-[#C6F118]/30 rounded-[2rem] -z-10 transition-transform group-hover:translate-x-2 group-hover:translate-y-2" />
 
                   {/* Profile Image */}
-
                   <img
                     src={personalInfo.personalImage}
                     alt={personalInfo.name}
@@ -469,26 +395,16 @@ export default function LandingPage() {
                   />
 
                   {/* Drag Indicator */}
-
                   <div className="absolute bottom-5 left-5 right-5 bg-black/60 backdrop-blur-md border border-neutral-700/50 py-3 px-6 rounded-full flex items-center justify-between pointer-events-none">
-
                     <span className="text-[10px] uppercase tracking-widest text-neutral-300">
                       Drag to interact
                     </span>
-
                     <div className="w-6 h-6 bg-[#C6F118] rounded-full flex items-center justify-center">
-                      <ArrowUpRight
-                        size={12}
-                        className="text-black"
-                      />
+                      <ArrowUpRight size={12} className="text-black" />
                     </div>
-
                   </div>
-
                 </motion.div>
-
               </div>
-
             </motion.div>
 
           </div>
