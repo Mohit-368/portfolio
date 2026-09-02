@@ -58,8 +58,8 @@ export const personalInfo = {
   designation: ["AI &", "Full-Stack", "Engineer"], 
   tagline: "Architecting production-ready RAG pipelines, agentic workflows, and highly distributed microservices.",
   availability: "Available For Work",
-  personalImage: "src/assets/home.jpg",
-  backgroundImage: "src/assets/a.jpg", 
+  personalImage: "/home.jpg",
+  backgroundImage: "/a.jpg", 
   links: {
     github: "https://github.com/yourusername",
     linkedin: "https://linkedin.com/in/yourusername",

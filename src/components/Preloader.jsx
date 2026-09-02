@@ -54,11 +54,13 @@ const AbstractCore = () => {
 
     // 3. Animation Loop
     let animationId;
-    const clock = new THREE.Clock();
+    const startTime = performance.now(); // Using native performance instead of deprecated THREE.Clock
 
     const animate = () => {
       animationId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      
+      // Calculate elapsed time in seconds natively
+      const elapsedTime = (performance.now() - startTime) / 1000;
 
       // Smooth, complex multi-axis rotation
       group.rotation.y += 0.005;
@@ -91,8 +93,7 @@ const AbstractCore = () => {
       line.material.dispose();
       renderer.dispose();
       
-      // Force context loss to free up GPU memory for the Landing Page
-      renderer.forceContextLoss(); 
+      // renderer.forceContextLoss() has been completely removed to prevent WebGL crashing 
     };
   }, []);
 
@@ -190,9 +191,9 @@ export default function Preloader({ onComplete }) {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C6F118] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C6F118]" />
               </span>
-              {/* <span className="text-[#C6F118] text-xs font-mono-custom tracking-[0.2em] uppercase">
+              <span className="text-[#C6F118] text-xs font-mono-custom tracking-[0.2em] uppercase">
                 AI + Backend Developer
-              </span> */}
+              </span>
             </motion.div>
           </div>
         </motion.div>
