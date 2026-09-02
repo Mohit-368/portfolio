@@ -3,9 +3,7 @@ import {
   ArrowUpRight,
   Menu,
   X,
-  Terminal,
-  Globe,
-  Code,
+  
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import GridDistortion from "./GridDistortion";
@@ -43,23 +41,7 @@ export default function LandingPage() {
     },
   };
 
-  const socialLinks = [
-    {
-      icon: Terminal,
-      link: personalInfo.links.github,
-      label: "GitHub",
-    },
-    {
-      icon: Globe,
-      link: personalInfo.links.linkedin,
-      label: "LinkedIn",
-    },
-    {
-      icon: Code,
-      link: personalInfo.links.leetcode,
-      label: "LeetCode",
-    },
-  ];
+
 
   return (
     <>
@@ -123,7 +105,7 @@ export default function LandingPage() {
             className="text-2xl font-display font-bold tracking-tight cursor-pointer hover:text-[#C6F118] transition-colors"
           >
             {personalInfo.name}
-            <span className="text-[#C6F118]">®</span>
+            
           </motion.div>
 
           {/* Right Navigation */}
@@ -133,16 +115,7 @@ export default function LandingPage() {
             className="flex items-center gap-4 md:gap-8"
           >
 
-            {/* Availability */}
-            <div className="hidden md:flex items-center gap-3 bg-neutral-900/50 backdrop-blur-md px-5 py-2.5 rounded-full border border-neutral-800">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C6F118] opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#C6F118]" />
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-neutral-400">
-                {personalInfo.availability}
-              </span>
-            </div>
+            
 
             {/* Menu Button */}
             <motion.button
@@ -323,30 +296,7 @@ export default function LandingPage() {
                 </motion.a>
 
                 {/* Social Links */}
-                <div className="flex items-center gap-3">
-                  {socialLinks.map((social, idx) => {
-                    const Icon = social.icon;
-                    return (
-                      <motion.a
-                        key={idx}
-                        href={social.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={social.label}
-                        title={social.label}
-                        whileHover={{
-                          y: -5,
-                          backgroundColor: "rgba(198,241,24,0.1)",
-                          color: "#C6F118",
-                          borderColor: "#C6F118",
-                        }}
-                        className="w-12 h-12 flex items-center justify-center rounded-full border border-neutral-800 bg-neutral-900/60 backdrop-blur-sm text-neutral-400 transition-all duration-300"
-                      >
-                        <Icon size={18} strokeWidth={1.5} />
-                      </motion.a>
-                    );
-                  })}
-                </div>
+                
               </motion.div>
             </motion.div>
 
