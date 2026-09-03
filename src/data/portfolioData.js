@@ -55,7 +55,7 @@ export const projects = [
 export const personalInfo = {
   name: "Mohit",
   // We use an array here so each string gets its own line in the massive hero text
-  designation: ["AI &", "Full-Stack", "Engineer"], 
+  designation: ["AI - ", "Backend", "Engineer"], 
   tagline: "Architecting production-ready RAG pipelines, agentic workflows, and highly distributed microservices.",
   availability: "Available For Work",
   personalImage: "/home.jpg",
