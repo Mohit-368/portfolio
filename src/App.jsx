@@ -5,6 +5,8 @@ import ScrollStack from './components/ScrollStack';
 import Preloader from './components/Preloader';
 import InteractiveArchitectureFlow from './components/InteractiveArchitectureFlow';
 import HorizontalScrollText from './components/HorizontalScrollText';
+import SkillMatrix from './components/SkillMatrix';
+import ContactBoard from './components/ContactBoard';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,8 @@ function App() {
         <div className="relative z-30 w-full bg-[#050505] border-t border-white/10 shadow-[0_-50px_100px_rgba(0,0,0,0.95)]">
           <InteractiveArchitectureFlow />
         </div>
-        
+        <SkillMatrix/>
+        <ContactBoard/>
       </main>
     </>
   );
