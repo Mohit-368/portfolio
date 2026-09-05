@@ -51,10 +51,14 @@ export default function ContactBoard() {
   const [active, setActive] = useState(0); 
 
   return (
-    <section className="w-full bg-white text-[#050505] py-24 md:py-32 relative overflow-hidden flex flex-col items-center z-40" id="contact">
+    // Changed bg-white to premium matte grey bg-[#EAEAEA]
+    <section className="w-full bg-[#EAEAEA] text-[#050505] py-24 md:py-32 relative overflow-hidden flex flex-col items-center z-40" id="contact">
       
+      {/* Subtle Film Grain / Noise for a premium matte finish */}
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04] pointer-events-none mix-blend-multiply z-0" />
+
       {/* 1. INFINITE SCROLLING MARQUEE HEADER */}
-      <div className="w-full overflow-hidden flex whitespace-nowrap mb-16 border-y-2 border-black/5 py-4 bg-[#F9F9F9]">
+      <div className="w-full overflow-hidden flex whitespace-nowrap mb-16 border-y-2 border-black/5 py-4 bg-black/[0.02] relative z-10">
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
           transition={{ ease: "linear", duration: 20, repeat: Infinity }}
@@ -64,7 +68,7 @@ export default function ContactBoard() {
             <div key={i} className="flex items-center gap-8">
               <span>Initiate Connection</span>
               <span className="text-[#C6F118]">✦</span>
-              <span className="text-transparent" style={{ WebkitTextStroke: "2px black" }}>Let's Build</span>
+              <span className="text-transparent" style={{ WebkitTextStroke: "2px black" }}>Let's Connect !</span>
               <span className="text-[#C6F118]">✦</span>
             </div>
           ))}
@@ -72,16 +76,16 @@ export default function ContactBoard() {
       </div>
 
       {/* 2. MAIN ACCORDION GALLERY */}
-      <div className="w-full max-w-[1600px] px-4 md:px-8 flex flex-col items-center">
+      <div className="w-full max-w-[1600px] px-4 md:px-8 flex flex-col items-center relative z-10">
         
         {/* Section Metadata */}
         <div className="w-full flex justify-between items-end mb-8 font-mono text-xs md:text-sm font-bold uppercase tracking-widest">
           <div className="flex flex-col gap-1">
             <span>Terminal // Contact</span>
-            <span className="text-neutral-400">Select a node to engage</span>
+            <span className="text-black/50">Select a node to engage</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#C6F118] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#C6F118] animate-pulse shadow-[0_0_8px_rgba(198,241,24,0.6)]" />
             <span>Listening</span>
           </div>
         </div>
@@ -102,8 +106,10 @@ export default function ContactBoard() {
                 onClick={() => setActive(i)}
                 animate={{
                   flex: isActive ? 6 : 1,
-                  backgroundColor: isActive ? "#050505" : "#F5F5F5",
-                  color: isActive ? "#FFFFFF" : "#050505"
+                  // Active is black, inactive is pure white (to pop off the grey background)
+                  backgroundColor: isActive ? "#050505" : "#FFFFFF",
+                  color: isActive ? "#FFFFFF" : "#050505",
+                  boxShadow: isActive ? "0 25px 50px -12px rgba(0,0,0,0.25)" : "0 4px 6px -1px rgba(0,0,0,0.05)"
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 className="relative rounded-[2rem] overflow-hidden flex flex-col border border-black/10 cursor-pointer group"
@@ -114,7 +120,7 @@ export default function ContactBoard() {
                   <div className="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center shrink-0">
                     <Icon size={20} className="text-black/60 group-hover:text-black transition-colors" />
                   </div>
-                  <span className="font-display text-2xl md:text-3xl font-black uppercase tracking-widest md:-rotate-90 md:origin-center md:whitespace-nowrap mt-0 md:mt-24 text-black/60 group-hover:text-black transition-colors">
+                  <span className="font-display text-2xl md:text-3xl font-black uppercase tracking-widest md:-rotate-90 md:origin-center md:whitespace-nowrap mt-0 md:mt-24 text-black/40 group-hover:text-black transition-colors">
                     {contact.title}
                   </span>
                 </div>

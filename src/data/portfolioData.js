@@ -68,3 +68,35 @@ export const personalInfo = {
     resume: "/resume.pdf"
   }
 };
+
+// src/data/portfolioData.js
+
+import { Briefcase, GraduationCap } from 'lucide-react';
+
+// ... (your existing personalInfo object stays here) ...
+
+export const timelineData = [
+  
+  // {
+  //   id: "exp-3",
+  //   type: "Experience",
+  //   title: "Software Challenger",
+  //   organization: "Flipkart GRiD 8.0",
+  //   location: "Remote",
+  //   duration: "July 2026",
+  //   description: "Participated in the software development track, building responsive UI components and expanding backend capabilities.",
+  //   tech: ["FastAPI", "React", "SASS/SCSS", "Problem Solving"],
+  //   icon: Briefcase
+  // },
+  {
+    id: "edu-1",
+    type: "Education",
+    title: "B.Tech Computer Science",
+    organization: "University Institute of Engineering & Technology",
+    location: "India",
+    duration: "Expected 2028",
+    description: "Focusing on core computer science fundamentals, including operating system architecture, process management, and CPU scheduling algorithms.",
+    tech: ["Data Structures", "Algorithms", "C++", "OS"],
+    icon: GraduationCap
+  }
+];

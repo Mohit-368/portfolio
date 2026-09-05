@@ -7,6 +7,7 @@ import InteractiveArchitectureFlow from './components/InteractiveArchitectureFlo
 import HorizontalScrollText from './components/HorizontalScrollText';
 import SkillMatrix from './components/SkillMatrix';
 import ContactBoard from './components/ContactBoard';
+import ExperienceDeck from './components/ExperienceDeck';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -33,6 +34,7 @@ function App() {
           <InteractiveArchitectureFlow />
         </div>
         <SkillMatrix/>
+        <ExperienceDeck/>
         <ContactBoard/>
       </main>
     </>
