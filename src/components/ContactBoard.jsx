@@ -8,40 +8,40 @@ const contacts = [
   { 
     id: "gmail", 
     title: "Email", 
-    handle: "hello@yourdomain.com", 
-    link: "mailto:hello@yourdomain.com", 
+    handle: "mohitberwalia@gmail.com", 
+    link: "mailto:mohitberwalia@gmail.com", 
     icon: Mail,
     tagline: "Direct Inbox"
   },
   { 
     id: "linkedin", 
     title: "LinkedIn", 
-    handle: "in/yourprofile", 
-    link: "https://linkedin.com/", 
+    handle: "mohitkumar368", 
+    link: "https://www.linkedin.com/in/mohitkumar368", 
     icon: Briefcase,
     tagline: "Professional Network"
   },
   { 
     id: "github", 
     title: "GitHub", 
-    handle: "@yourusername", 
-    link: "https://github.com/", 
+    handle: "@Mohit-368", 
+    link: "https://github.com/Mohit-368", 
     icon: GitBranch,
     tagline: "Open Source Activity"
   },
   { 
     id: "leetcode", 
     title: "LeetCode", 
-    handle: "yourusername", 
-    link: "https://leetcode.com/", 
+    handle: "Mohit_368", 
+    link: "https://leetcode.com/u/Mohit_368/", 
     icon: Code,
     tagline: "Algorithm Metrics"
   },
   { 
     id: "phone", 
     title: "Phone", 
-    handle: "+91 000 000 0000", 
-    link: "tel:+910000000000", 
+    handle: "+91 968 252 5783", 
+    link: "tel:+919682525783", 
     icon: Phone,
     tagline: "Direct Line"
   }
